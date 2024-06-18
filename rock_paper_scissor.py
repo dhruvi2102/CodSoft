@@ -1,139 +1,100 @@
-# Importing Required Library
 from tkinter import *
-import random
+
+screen = Tk()  # Tk() class importing -creating object of Tk()
+screen.geometry("500x500")
+screen.title("ROCK PAPER SCISSOR")
 
 
-root = Tk()
+"""
+     python logic is here
 
-root.geometry("500x500")
+"""
 
+from random import choice
 
-root.title("Rock Paper Scissor Game")
-
-computer_value = {
-	"0": "Rock",
-	"1": "Paper",
-	"2": "Scissor"
-}
+gameList=["ROCK","PAPER","SCISSOR"]
 
 
-def reset_game():
-	b1["state"] = "active"
-	b2["state"] = "active"
-	b3["state"] = "active"
-	l1.config(text="Player")
-	l3.config(text="Computer")
-	l4.config(text="")
+userchoicevar= StringVar()
+userchoicevar.set("PENDING")
+
+computerchoicevar=StringVar()
+computerchoicevar.set("PENDING")
+
+userScore=IntVar()
+userScore.set(0)
+computerScore=IntVar()
+computerScore.set(0)
+finalval=StringVar()
+
+c_score=0
+u_score=0
+game_chance=0
+def game(userChoice):
+    global c_score,u_score,game_chance
+    if game_chance==5:
+        if u_score>c_score:
+            finalval.set("User won the game")
+        else:
+            finalval.set("Computer won the game")
+    else:            
+    #print(userChoice)
+        userchoicevar.set(userChoice)
+        computer = choice(gameList)     # randomly generate value
+        computerchoicevar.set(computer)
+        if userChoice=="ROCK" and computer=="PAPER" or userChoice=="PAPER" and computer=="SCISSOR" or userChoice=="SCISSOR" and computer=="ROCK":
+            c_score+=1
+            computerScore.set(c_score)
+
+        elif userChoice=="ROCK" and computer=="SCISSOR" or userChoice=="PAPER" and computer=="ROCK" or userChoice=="SCISSOR" and computer=="PAPER":
+            u_score+=1
+            userScore.set(u_score)     
+
+        else:
+            print("It's a TIE.....")    
+        
+        game_chance+=1
 
 
-def button_disable():
-	b1["state"] = "disable"
-	b2["state"] = "disable"
-	b3["state"] = "disable"
+lbl= Label(screen,text="WELCOME TO ROCK PAPER SCISSOR GAME",font=("Arial",16,"bold"))
+lbl.place(x=10,y=10)
+
+btn = Button(screen,text="ROCK",font=("Arial",16,"bold"),bg="blue",fg="white",command=lambda : game("ROCK"))
+btn.place(x=50,y=60)
+
+btn = Button(screen,text="PAPER",font=("Arial",16,"bold"),bg="blue",fg="white",command=lambda : game("PAPER"))
+btn.place(x=200,y=60)
+
+btn = Button(screen,text="SCISSOR",font=("Arial",16,"bold"),bg="blue",fg="white",command=lambda : game("SCISSOR"))
+btn.place(x=350,y=60)
 
 
-def isrock():
-	c_v = computer_value[str(random.randint(0, 2))]
-	if c_v == "Rock":
-		match_result = "It's a tie"
-	elif c_v == "Scissor":
-		match_result = "Player Win"
-	else:
-		match_result = "Computer Win"
-	l4.config(text=match_result)
-	l1.config(text="Rock")
-	l3.config(text=c_v)
-	button_disable()
+# for user score section
+lbl = Label(screen,text="USER",font=("Arial",16,"bold"))
+lbl.place(x=30,y=160)
 
-def ispaper():
-	c_v = computer_value[str(random.randint(0, 2))]
-	if c_v == "Paper":
-		match_result = "It's a tie"
-	elif c_v == "Scissor":
-		match_result = "Computer Win"
-	else:
-		match_result = "Player Win"
-	l4.config(text=match_result)
-	l1.config(text="Paper")
-	l3.config(text=c_v)
-	button_disable()
+btn = Button(screen,textvariable=userchoicevar,font=("Arial",16,"bold"),bg="green",fg="white")
+btn.place(x=200,y=150)
 
-# If player selected scissor
+btn = Button(screen,textvariable=userScore,font=("Arial",16,"bold"),bg="cyan",fg="black")
+btn.place(x=350,y=150)
 
+# for computer score section 
 
-def isscissor():
-	c_v = computer_value[str(random.randint(0, 2))]
-	if c_v == "Rock":
-		match_result = "Computer Win"
-	elif c_v == "Scissor":
-		match_result = "It's a tie"
-	else:
-		match_result = "Player Win"
-	l4.config(text=match_result)
-	l1.config(text="Scissor")
-	l3.config(text=c_v)
-	button_disable()
+lbl = Label(screen,text="COMPUTER",font=("Arial",16,"bold"))
+lbl.place(x=30,y=220)
 
+btn = Button(screen,textvariable=computerchoicevar,font=("Arial",16,"bold"),bg="green",fg="white")
+btn.place(x=200,y=220)
 
-# Add Labels, Frames and Button
-Label(root,
-	text="Rock Paper Scissor",
-	font="normal 20 bold",
-	fg="blue").pack(pady=20)
+btn = Button(screen,textvariable=computerScore,font=("Arial",16,"bold"),bg="cyan",fg="black")
+btn.place(x=350,y=220)
 
-frame = Frame(root)
-frame.pack()
+#for final winner
 
-l1 = Label(frame,
-		text="Player",
-		font=10)
-
-l2 = Label(frame,
-		text="VS",
-		font="normal 10 bold")
-
-l3 = Label(frame, text="Computer", font=10)
-
-l1.pack(side=LEFT)
-l2.pack(side=LEFT)
-l3.pack()
-
-l4 = Label(root,
-		text="",
-		font="normal 20 bold",
-		bg="white",
-		width=15,
-		borderwidth=2,
-		relief="solid")
-l4.pack(pady=20)
-
-frame1 = Frame(root)
-frame1.pack()
-
-b1 = Button(frame1, text="Rock",
-			font=10, width=7,
-			command=isrock)
-
-b2 = Button(frame1, text="Paper ",
-			font=10, width=7,
-			command=ispaper)
-
-b3 = Button(frame1, text="Scissor",
-			font=10, width=7,
-			command=isscissor)
-
-b1.pack(side=LEFT, padx=10)
-b2.pack(side=LEFT, padx=10)
-b3.pack(padx=10)
-
-Button(root, text="Reset Game",
-	font=10, fg="red",
-	bg="black", command=reset_game).pack(pady=20)
-
-# Execute Tkinter
-root.mainloop()
-
-    
+lb1=Label(screen,textvariable=finalval,font=("Arial",16,"bold"),fg="red")
+lb1.place(x=130,y=300)
+screen.mainloop()
        
         
             
